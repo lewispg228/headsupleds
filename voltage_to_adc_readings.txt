@@ -1,0 +1,7 @@
+Actual readings passed across RFM69s.
+
+Not sure why these are different, but maybe it has to do with... I have no idea.
+
+12.6 = 974
+
+11.15 = 860

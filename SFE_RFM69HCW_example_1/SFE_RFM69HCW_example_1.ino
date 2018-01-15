@@ -50,6 +50,10 @@
 
 RFM69 radio;
 
+#include <SoftwareSerial.h>
+
+SoftwareSerial mySerial(3, 4); // RX (not gonna work on pin 3, but I don't need it to), TX
+
 void setup()
 {
   // Open a serial port so we can send keystrokes to the module:
@@ -76,6 +80,9 @@ void setup()
   
   if (ENCRYPT)
     radio.encrypt(ENCRYPTKEY);
+    
+  mySerial.begin(4800);
+  test_commands();
 }
 
 void loop()
@@ -183,4 +190,17 @@ void Blink(byte PIN, int DELAY_MS)
   digitalWrite(PIN,HIGH);
   delay(DELAY_MS);
   digitalWrite(PIN,LOW);
+}
+
+void test_commands()
+{
+  for(int i = 0 ; i < 3 ; i++ )
+  {
+    mySerial.print('a');
+    delay(100);
+    mySerial.print('b');
+    delay(100);
+    mySerial.print('c');
+    delay(100);
+  }
 }

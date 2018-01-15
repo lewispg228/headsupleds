@@ -54,6 +54,9 @@ RFM69 radio;
 
 SoftwareSerial mySerial(3, 4); // RX (not gonna work on pin 3, but I don't need it to), TX
 
+int battAdcInt = 0; // global variable used to store battery ADC readings (voltage)
+int battVoltage = 0;
+
 void setup()
 {
   // Open a serial port so we can send keystrokes to the module:
@@ -154,6 +157,7 @@ void loop()
 
   if (radio.receiveDone()) // Got one!
   {
+    
     // Print out the information:
     
     Serial.print("received from node ");
@@ -163,8 +167,24 @@ void loop()
     // The actual message is contained in the DATA array,
     // and is DATALEN bytes in size:
     
+    String battAdcString = "";
+    
     for (byte i = 0; i < radio.DATALEN; i++)
-      Serial.print((char)radio.DATA[i]);
+    {
+      char data = char(radio.DATA[i]);
+      Serial.print(data);  
+      battAdcString += data; // append each new char to the string (for use later as an int with "toInt()"
+      //Serial.print((char)radio.DATA[i]); 
+    } 
+    
+    battAdcInt = battAdcString.toInt();
+    Serial.print(", "); // space this sucker out, so I know what the heck is going on.
+    Serial.print(battAdcInt);
+    battVoltage = map(battAdcInt, 860, 974, 111, 126);
+    Serial.print(", "); // space this sucker out, so I know what the heck is going on.
+    Serial.print(battVoltage);
+    
+    update_batt_stat();
 
     // RSSI is the "Receive Signal Strength Indicator",
     // smaller numbers mean higher power.
@@ -203,4 +223,14 @@ void test_commands()
     mySerial.print('c');
     delay(100);
   }
+}
+
+void update_batt_stat()
+{
+  int green = 121;
+  int yellow = 117;
+  int red = 113;
+  if (battVoltage >= green) mySerial.print('a');
+  else if (battVoltage <= red) mySerial.print('c');
+  else if (battVoltage >= yellow) mySerial.print('b');
 }

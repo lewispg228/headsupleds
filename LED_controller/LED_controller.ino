@@ -41,6 +41,8 @@ SoftwareSerial mySerial(12, 13); // RX, TX
 
 int ledPin [] = {6,7,8};
 
+int message_count = 0;
+
 
 void setup()  
 {
@@ -67,6 +69,7 @@ void loop() // run over and over
 {
   if (mySerial.available())
   {
+    message_count++; // increment message count, so I can turn LEDs off every 10 seconds to indicate that I'm still receiving data during flight
     int inByte = mySerial.read();
     Serial.write(inByte);
     digitalWrite(6, LOW);
@@ -89,6 +92,14 @@ void loop() // run over and over
         digitalWrite(thisPin, LOW);
       }
     } 
+  }
+  if(message_count > 100)
+  {
+    digitalWrite(6, LOW);
+    digitalWrite(7, LOW);
+    digitalWrite(8, LOW);
+    delay(100);
+    message_count = 0; // reset
   }
 }
 

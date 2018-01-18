@@ -180,7 +180,7 @@ void loop()
     battAdcInt = battAdcString.toInt();
     Serial.print(", "); // space this sucker out, so I know what the heck is going on.
     Serial.print(battAdcInt);
-    battVoltage = map(battAdcInt, 860, 974, 111, 126);
+    battVoltage = map(battAdcInt, 851, 968, 111, 126);
     Serial.print(", "); // space this sucker out, so I know what the heck is going on.
     Serial.print(battVoltage);
     

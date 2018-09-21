@@ -33,22 +33,60 @@ void setup() {
 void loop() {
 
   // For a set of NeoPixels the first NeoPixel is 0, second is 1, all the way up to the count of pixels minus one.
-
-  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i,0,25,0);
-  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i,25,0,0);
-  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i,0,0,25);
-
+  scanner_top(25);
+  scanner_top(25);
+  scanner_top(25);
+  all_off();
+  test_all(15);
 }
 
+void test_all(int brightness)
+{
+  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i, 0, brightness, 0, 100);
+  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i, brightness, 0, 0, 100);
+  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i, 0, 0, brightness, 100);
+}
 
-void test_loop(int pixel, int red, int green, int blue)
+void test_loop(int pixel, int red, int green, int blue, int delay_val)
 {
 
   pixels.setPixelColor(pixel, pixels.Color(red, green, blue)); // Moderately bright green color.
 
   pixels.show(); // This sends the updated pixel color to the hardware.
 
-  delay(delayval); // Delay for a period of time (in milliseconds).
+  delay(delay_val);
+
+}
+
+void single_top(int pixel, int red, int green, int blue)
+{
+  all_off();
+
+  pixel += 4; // get me to the top row of pixels
+
+  pixels.setPixelColor(pixel, pixels.Color(red, green, blue)); // Moderately bright green color.
+
+  pixels.show(); // This sends the updated pixel color to the hardware.
+
+}
+
+void all_off(void)
+{
+  for (int i = 0 ; i < NUMPIXELS ; i++ ) test_loop(i, 0, 0, 0, 0);
+}
+
+void scanner_top(int brightness)
+{
+  for (int i = 0 ; i < 7 ; i++)
+  {
+    single_top(i, 0, brightness, 0);
+    delay(100);
+  }
+  for (int i = 6 ; i > 0 ; i--)
+  {
+    single_top(i, 0, brightness, 0);
+    delay(100);
+  }
 
 }
 
